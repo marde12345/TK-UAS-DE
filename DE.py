@@ -61,7 +61,7 @@ class DE:
 def main():
     k = 5
     data = DE(k)
-    eval = k * 4
+    eval = k * 8
 
     fig = plt.figure()
     figd = plt.figure()
