@@ -39,14 +39,16 @@ class DE:
             jrand = self.norm(self.D)
             
             for j in range(self.D):
-                if (rand.random() <= self.pr or j == jrand):
-                    self.VecU[i][j] = self.VecV[x][j] + self.tolerance * (self.VecV[y][j] - self.VecV[z][j])
+                if (rand.random() <= self.pr):
+                    self.VecU[i][j] = (self.VecV[x][j] + self.tolerance * (self.VecV[y][j] - self.VecV[z][j]))
                 else:
                     self.VecU[i][j] = self.VecV[i][j]
 
     def selection(self):
         for i in range(self.k):
             if self.fitness(self.VecU[i][0], self.VecU[i][1]) < self.fitness(self.VecV[i][0], self.VecV[i][1]):
+                print('Change '+str(i))
+                print(self.VecV[i],' <-- ',self.VecU[i])
                 self.VecV[i][0] = self.VecU[i][0]
                 self.VecV[i][1] = self.VecU[i][1]
 
@@ -55,79 +57,45 @@ class DE:
 
     def norm(self, x):
         return math.floor(rand.random() * x)
-def main():
-    data = DE(20)
 
+def main():
+    k = 5
+    data = DE(k)
+    eval = k * 4
+
+    fig = plt.figure()
+    figd = plt.figure()
+    dx = figd.add_subplot(111)
+    ax = fig.add_subplot(111)
     print(data.VecV)
 
     evaluation = 0
-    while(evaluation<100):
+    while(evaluation<eval):
+        print('---------------------')
+        print('Evaluation '+str(evaluation))
         data.mutasi()
+        print('Vector U')
+        print(data.VecU)
         data.selection()
+        print('Selection')
+        print(data.VecV)
+        
+        line1 = ax.plot(data.VecU[:, 0], data.VecU[:, 1],'g.')
+        line2 = ax.plot(data.VecV[:, 0], data.VecV[:, 1],'b1')
+        line1 = dx.plot(data.VecU[:, 0], data.VecU[:, 1],'g.')
+        line2 = dx.plot(data.VecV[:, 0], data.VecV[:, 1],'b1')
+        ax.grid(True)
+        dx.grid(True)
+        ax.set_xlim(-20, 20)
+        ax.set_ylim(-20, 20)
 
-        print(evaluation,'\n',data.VecU)
+        if evaluation < eval/4 or evaluation % 10 == 0 or evaluation > eval - (eval/4):
+            fig.savefig('./evol_conc_v'+str(evaluation+1)+'.png')
+            figd.savefig('./evol_conc_v'+str(evaluation+1)+'d.png')
+            ax.clear()
+            dx.clear()
+        
         evaluation += 1
-    # k = 40 #Numero de individuos
-    # D = 2
-    # Cr = 0.9 #Probabilidad de ser mutado de un individuo
-    # F = 0.5  #Operador de cruzamiento
-
-    # VectorV = np.empty((k, D))
-    # VectorU = np.empty((k, D))
-
-    # #Inicializar los arreglos
-    # for i in range(k):
-    #     for j in range(2):
-    #         VectorV[i][j] = rand.randint(-10, 20)
-
-    # plt.ion()
-    # fig = plt.figure()
-    # ax = fig.add_subplot(111)
-    # ax.grid(True)
-            
-    # NumEvaluaciones = 0
-    # while(NumEvaluaciones < 200):
-    #     for i in range(k):
-    #         r0 = i
-    #         while(r0 == i):
-    #             r0 = norm(k)
-    #         r1 = r0
-    #         while(r1 == r0 or r1 == i):
-    #             r1 = norm(k)
-    #         r2 = r1
-    #         while(r2 == r1 or r2 == r0 or r2 == i):
-    #             r2 = norm(k)
-                
-    #         jrand = norm(D)
-            
-    #         for j in range(D):
-    #             if (rand.random() <= Cr or j == jrand):
-    #                 #Mutaci�n
-    #                 VectorU[i][j] = VectorV[r0][j] + F * (VectorV[r1][j] - VectorV[r2][j])
-    #             else:
-    #                 VectorU[i][j] = VectorV[i][j]
-
-    #     for k in range(k):
-    #         if fitness(VectorU[k][0], VectorU[k][1]) < fitness(VectorV[k][0], VectorV[k][1]):
-    #             VectorV[k][0] = VectorU[k][0]
-    #             VectorV[k][1] = VectorU[k][1]
-
-    #     line1 = ax.plot(VectorU[:, 0], VectorU[:, 1],'b+')
-    #     line2 = ax.plot(VectorV[:, 0], VectorV[:, 1],'g*')
-
-    #     ax.set_xlim(-10, 20)
-    #     ax.set_ylim(-10, 20)
-        
-    #     fig.canvas.draw()
-
-    #     ax.clear()
-    #     ax.grid(True)
-        
-    #     NumEvaluaciones += 1
-
-def fitness(x, y):
-    #Funcion Rosenbrock en 2D
-    return 100 * ((y - (x**2))**2) + ((1 - (x**2))**2)
 
 if '__main__' == main():
     main()
