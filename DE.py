@@ -47,8 +47,8 @@ class DE:
     def selection(self):
         for i in range(self.k):
             if self.fitness(self.VecU[i][0], self.VecU[i][1]) < self.fitness(self.VecV[i][0], self.VecV[i][1]):
-                print('Change '+str(i))
-                print(self.VecV[i],' <-- ',self.VecU[i])
+                # print('Change '+str(i))
+                # print(self.VecV[i],' <-- ',self.VecU[i])
                 self.VecV[i][0] = self.VecU[i][0]
                 self.VecV[i][1] = self.VecU[i][1]
 
@@ -59,7 +59,7 @@ class DE:
         return math.floor(rand.random() * x)
 
 def main():
-    k = 5
+    k = 50
     data = DE(k)
     eval = k * 8
 
@@ -67,18 +67,12 @@ def main():
     figd = plt.figure()
     dx = figd.add_subplot(111)
     ax = fig.add_subplot(111)
-    print(data.VecV)
 
     evaluation = 0
     while(evaluation<eval):
-        print('---------------------')
         print('Evaluation '+str(evaluation))
         data.mutasi()
-        print('Vector U')
-        print(data.VecU)
         data.selection()
-        print('Selection')
-        print(data.VecV)
         
         line1 = ax.plot(data.VecU[:, 0], data.VecU[:, 1],'g.')
         line2 = ax.plot(data.VecV[:, 0], data.VecV[:, 1],'b1')
